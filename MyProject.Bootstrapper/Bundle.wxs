@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+
+  <Bundle Name="MyProject.Bootstrapper" Version="1.0.0.0" Manufacturer="Michiel Sioen" UpgradeCode="3C3F71CE-D273-4DA8-976E-8B379EA2F24F">
+
+    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.HyperlinkLicense">
+      <bal:WixStandardBootstrapperApplication
+        LogoFile="res/logo.jpg"
+        LicenseUrl="http://www.michielsioen.be"
+        ThemeFile="res/MyCustomBootstrapperTheme.xml"
+        LocalizationFile="res/MyCustomBootstrapperTheme.wxl" />
+    </BootstrapperApplicationRef>
+
+    <Chain>
+      <MsiPackage Id="Setup" SourceFile="$(var.MyProject.Setup.TargetPath)" Compressed="yes" />
+    </Chain>
+    
+  </Bundle>
+</Wix>

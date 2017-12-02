@@ -1,0 +1,1 @@
+Example WiX installer implementation
