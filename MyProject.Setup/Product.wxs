@@ -6,13 +6,20 @@
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate />
 
+    <!-- define product features -->
 		<Feature Id="ProductFeature" Title="MyProject.Setup" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
+
+    <!-- define our icon + ensure Windows programs & features uses it -->
+    <Icon Id="MyProductIcon" SourceFile="$(var.MyProject.TargetPath)"/>
+    <Property Id='ARPPRODUCTICON'>MyProductIcon</Property>
+    
 	</Product>
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="DesktopFolder" Name="Desktop" />
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLFOLDER" Name="MyProject.Setup" />
 			</Directory>
@@ -21,9 +28,21 @@
 
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      
+      <!-- Actual install component -->
 			<Component Id="ProductComponent">
 				<File Id="ApplicationExe" Name="$(var.MyProject.TargetFileName)" KeyPath="yes" Source="$(var.MyProject.TargetPath)"/>
 			</Component>
-		</ComponentGroup>
+      
+      <!-- Conditional shortcut component-->
+      <Component Id="DesktopShortcutComponent" Guid="*">
+        <RegistryValue Id="RegShortcutDesktop" Root="HKCU" Key="SOFTWARE\MyProject\1.0\settings" Name="DesktopSC" Value="1" Type="integer" KeyPath="yes" />
+        <Shortcut Id="desktopSc" Target="[INSTALLFOLDER]\$(var.MyProject.TargetFileName)" Directory="DesktopFolder" Name="MyProjectShortcut" Icon="MyProductIcon" IconIndex="0" WorkingDirectory="INSTALLFOLDER" Advertise="no"/>
+        <RemoveFolder Id="RemoveShortcutFolder" On="uninstall" />
+        <Condition>ADDDESKTOPSHORTCUT=1</Condition>
+      </Component>
+      
+    </ComponentGroup>
 	</Fragment>
+  
 </Wix>
